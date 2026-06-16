@@ -116,6 +116,21 @@
     color: var(--coral);
   }
 
+  /* ===== Logout Button style ===== */
+  .logout-container {
+    text-align: left;
+    margin-bottom: 20px;
+  }
+  .logout-btn {
+    background: rgba(224,121,90,0.1);
+    color: var(--coral);
+    border: 1px solid var(--coral);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
   /* ===== Main App Area (Hidden initially) ===== */
   #mainAppContent {
     display: none;
@@ -250,7 +265,7 @@
 </head>
 <body>
 
-<!-- 1. BOGGA QUFULKA (PASSWORD ONLY) -->
+<!-- 1. BOGGA QUFULKA (PASSWORD SCREEN) -->
 <div id="lockScreen">
   <div class="lock-card">
     <span class="lock-icon">🔒</span>
@@ -269,6 +284,11 @@
 
 <!-- 2. BOGGA MASHALKA (MAIN APP CONTENT) -->
 <div id="mainAppContent" class="wrap">
+
+  <!-- Batanka Logout-ga -->
+  <div class="logout-container">
+    <button class="logout-btn" onclick="logout()">تسجيل الخروج 🚪</button>
+  </div>
 
   <header>
     <div class="eyebrow">مخطط الميزانية الشخصية</div>
@@ -403,6 +423,10 @@
       verifyPassword();
     }
   });
+
+  function logout() {
+    window.location.reload();
+  }
 
 
   // ===== BUDGET CALCULATIONS CODE =====

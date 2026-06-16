@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مخطط راتبي - محمي</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap');
 
         :root {
             --bg: #0F1A17;
@@ -107,21 +107,6 @@
         .btn-primary:hover {
             background: var(--gold-soft);
         }
-        .btn-secondary {
-            background: none;
-            border: 1px solid var(--line);
-            color: var(--ink-dim);
-            padding: 10px;
-            border-radius: 12px;
-            font-size: 14px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 12px;
-        }
-        .btn-secondary:hover {
-            color: var(--ink);
-            border-color: var(--ink-dim);
-        }
         .alert-box {
             padding: 12px;
             border-radius: 12px;
@@ -134,11 +119,6 @@
             background: rgba(224,121,90,0.1);
             border: 1px solid var(--coral);
             color: var(--coral);
-        }
-        .alert-success {
-            background: rgba(111,191,155,0.1);
-            border: 1px solid var(--mint);
-            color: var(--mint);
         }
 
         /* ===== Main Dashboard Area ===== */
@@ -166,8 +146,6 @@
             font-size: 14px;
         }
     </style>
-    <!-- Soo daji EmailJS SDK -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
 
@@ -176,28 +154,16 @@
         <div class="lock-card">
             <span class="lock-icon">🔒</span>
             <h2>مخطط راتبي</h2>
-            <p>هذه الصفحة محمية بكلمة مرور ورمز تحقق على بريدك الإلكتروني</p>
+            <p>هذه الصفحة محمية بكلمة مرور للحفاظ على خصوصية بياناتك</p>
 
             <div id="alertBox" class="alert-box alert-danger"></div>
 
-            <!-- Qaybta 1: Erayga Sirta ah (Password) -->
             <div id="passwordStep">
                 <div class="input-group">
-                    <label>أدخل كلمة المرور العامة</label>
+                    <label>أدخل كلمة المرور</label>
                     <input type="password" id="passwordInput" class="input-field" placeholder="••••••••">
                 </div>
-                <button class="btn-primary" onclick="verifyPassword()">التالي ➔</button>
-            </div>
-
-            <!-- Qaybta 2: Nambarka Amniga ee iimeelka (OTP) -->
-            <div id="otpStep" style="display: none;">
-                <div class="input-group">
-                    <label>رمز التحقق (OTP)</label>
-                    <input type="text" id="otpInput" class="input-field" placeholder="0 0 0 0 0 0" maxlength="6" style="letter-spacing: 8px; font-family: 'IBM Plex Mono', monospace;">
-                </div>
-                <button class="btn-primary" onclick="verifyOTP()">دخول 🔓</button>
-                <button class="btn-secondary" onclick="sendOTP()">إعادة إرسال الرمز</button>
-                <button class="btn-secondary" onclick="backToPassword()" style="border:none;">← تغيير كلمة المرور</button>
+                <button class="btn-primary" onclick="verifyPassword()">دخول 🔓</button>
             </div>
         </div>
     </div>
@@ -215,81 +181,27 @@
     </div>
 
     <script>
-        // === CONFIGURATION ===
         const CORRECT_PASSWORD = "MyBudget@2025";
-        let generatedOTP = "";
 
-        // === KOOPIYEE CODES-KAAGA EMAILJS HALKAN ===
-        emailjs.init("u6bM7D_vIAnXlR88h"); 
-
-        const EMAILJS_SERVICE_ID = "service_gtdw0it";   
-        const EMAILJS_TEMPLATE_ID = "template_j0p4kdr"; 
-
-        // Xaaladaha UI-ga badbaadiya
-        function showAlert(text, type = 'danger') {
+        function showAlert(text) {
             const box = document.getElementById('alertBox');
             box.innerText = text;
-            box.className = `alert-box alert-${type}`;
             box.style.display = 'block';
         }
         function hideAlert() {
             document.getElementById('alertBox').style.display = 'none';
         }
 
-        // Tillaabada 1aad: Hubi Password-ka
         function verifyPassword() {
             hideAlert();
             const pass = document.getElementById('passwordInput').value;
             if (pass === CORRECT_PASSWORD) {
-                sendOTP();
-            } else {
-                showAlert("كلمة المرور غير صحيحة! حاول مرة أخرى.");
-            }
-        }
-
-        // Tillaabada 2aad: Abuur OTP oo u dir Iimeelka
-        function sendOTP() {
-            hideAlert();
-            // Samee 6 nambar oo random ah
-            generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
-            
-            showAlert("جاري إرسال رمز التحقق إلى بريدك الإلكتروني...", "success");
-
-            // Nidaamka loo dirayo EmailJS
-            const templateParams = {
-                otp_code: generatedOTP,
-                to_name: "Abdiwahid"
-            };
-
-            emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
-                .then(function(response) {
-                    showAlert("تم إرسال رمز مكون من 6 أرقام إلى بريدك الإلكتروني. تحقق من صندوق الوارد أو البريد المزعج.", "success");
-                    document.getElementById('passwordStep').style.display = 'none';
-                    document.getElementById('otpStep').style.display = 'block';
-                }, function(error) {
-                    console.error("EmailJS Error:", error);
-                    showAlert("فشل إرسال البريد الإلكتروني. تحقق من إعدادات EmailJS في القنصل (Console).", "danger");
-                });
-        }
-
-        // Tillaabada 3aad: Hubi OTP-ga uu macaamiilku qoray
-        function verifyOTP() {
-            hideAlert();
-            const userOTP = document.getElementById('otpInput').value.trim();
-            
-            if (userOTP === generatedOTP) {
-                // Fur boggii rasmiga ahaa
+                // Si toos ah u fur bogga rasmiga ah
                 document.getElementById('lockScreen').style.display = 'none';
                 document.getElementById('mainContent').style.display = 'block';
             } else {
-                showAlert("رمز التحقق غير صحيح! يرجى التأكد من الرمز المرسل.");
+                showAlert("كلمة المرور غير صحيحة! حاول مرة أخرى.");
             }
-        }
-
-        function backToPassword() {
-            hideAlert();
-            document.getElementById('otpStep').style.display = 'none';
-            document.getElementById('passwordStep').style.display = 'block';
         }
 
         function logout() {

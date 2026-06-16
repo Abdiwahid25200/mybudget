@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>مخطط راتبي</title>
+<title>مخطط راتبي - محمي</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap');
 
@@ -18,14 +18,13 @@
     --coral:#E0795A;
     --ink:#EDEFE8;
     --ink-dim:#9FB0A8;
-    --danger:#E0795A;
   }
 
   *{box-sizing:border-box; margin:0; padding:0;}
   html,body{background:var(--bg); color:var(--ink); font-family:'Tajawal', sans-serif;}
   body{min-height:100vh; padding:28px 16px 80px; direction:rtl;}
 
-  /* ===== Lock Screen Style ===== */
+  /* ===== Lock Screen ===== */
   #lockScreen {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -46,563 +45,319 @@
     text-align: center;
     box-shadow: 0 20px 40px rgba(0,0,0,0.4);
   }
-  .lock-icon {
-    font-size: 48px;
-    margin-bottom: 20px;
-    display: inline-block;
-  }
-  .lock-card h2 {
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 8px;
-  }
-  .lock-card p {
-    color: var(--ink-dim);
-    font-size: 14px;
-    margin-bottom: 24px;
-  }
-  .input-group {
-    margin-bottom: 20px;
-    text-align: right;
-  }
-  .input-group label {
-    display: block;
-    font-size: 13px;
-    color: var(--ink-dim);
-    margin-bottom: 8px;
-    font-weight: 500;
-  }
+  .lock-icon { font-size: 48px; margin-bottom: 20px; display: inline-block; }
+  .lock-card h2 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+  .lock-card p { color: var(--ink-dim); font-size: 14px; margin-bottom: 24px; }
+  
+  .input-group { margin-bottom: 20px; text-align: right; }
+  .input-group label { display: block; font-size: 13px; color: var(--ink-dim); margin-bottom: 8px; }
   .lock-field {
-    width: 100%;
-    background: var(--bg);
-    border: 1px solid var(--line);
-    padding: 14px 16px;
-    border-radius: 12px;
-    color: var(--ink);
-    font-size: 16px;
-    transition: all 0.3s;
-    text-align: center;
+    width: 100%; background: var(--bg); border: 1px solid var(--line);
+    padding: 14px 16px; border-radius: 12px; color: var(--ink);
+    font-size: 16px; text-align: center; outline: none;
   }
-  .lock-field:focus {
-    border-color: var(--gold);
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(201,162,75,0.15);
-  }
+  .lock-field:focus { border-color: var(--gold); }
+  
   .btn-lock {
-    width: 100%;
-    background: var(--gold);
-    color: #000;
-    border: none;
-    padding: 14px;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
+    width: 100%; background: var(--gold); color: #000; border: none;
+    padding: 14px; border-radius: 12px; font-size: 16px; font-weight: 700;
+    cursor: pointer; transition: 0.2s;
   }
-  .btn-lock:hover {
-    background: var(--gold-soft);
-  }
+  .btn-lock:hover { background: var(--gold-soft); }
   .alert-box {
-    padding: 12px;
-    border-radius: 12px;
-    font-size: 14px;
-    margin-bottom: 20px;
-    display: none;
-    text-align: right;
-    background: rgba(224,121,90,0.1);
-    border: 1px solid var(--coral);
-    color: var(--coral);
+    padding: 12px; border-radius: 12px; font-size: 14px; margin-bottom: 20px;
+    display: none; text-align: right; background: rgba(224,121,90,0.1);
+    border: 1px solid var(--coral); color: var(--coral);
   }
 
-  /* ===== Logout Button style ===== */
-  .logout-container {
-    text-align: left;
-    margin-bottom: 20px;
-  }
+  /* ===== Main Content Area ===== */
+  #mainAppContent { display: none; }
+  .wrap { max-width: 760px; margin: 0 auto; }
+
+  /* Top Bar */
+  .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
   .logout-btn {
-    background: rgba(224,121,90,0.1);
-    color: var(--coral);
-    border: 1px solid var(--coral);
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
+    background: rgba(224,121,90,0.1); color: var(--coral); border: 1px solid var(--coral);
+    padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 14px;
   }
 
-  /* ===== Main App Area (Hidden initially) ===== */
-  #mainAppContent {
-    display: none;
+  /* Success Notice Box */
+  .success-banner {
+    background: rgba(111, 191, 155, 0.08); border: 1px solid rgba(111, 191, 155, 0.2);
+    border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 28px;
+  }
+  .success-banner h3 { color: var(--mint); font-size: 18px; margin-bottom: 6px; }
+  .success-banner p { color: var(--ink-dim); font-size: 14px; }
+
+  /* Dashboard Cards */
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 24px; margin-bottom: 20px; }
+  .card-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .card-title .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); }
+
+  label { display: block; font-size: 13px; color: var(--ink-dim); margin-bottom: 6px; }
+  input[type=number], input[type=text] {
+    width: 100%; background: var(--panel-2); border: 1px solid var(--line);
+    color: var(--ink); font-size: 16px; padding: 12px 14px; border-radius: 10px; outline: none;
+  }
+  input[type=number]:focus, input[type=text]:focus { border-color: var(--gold); }
+
+  /* Sliders & Presets */
+  .presets { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+  .preset-btn {
+    font-size: 12px; padding: 7px 14px; border-radius: 20px; border: 1px solid var(--line);
+    background: var(--panel-2); color: var(--ink-dim); cursor: pointer;
+  }
+  .preset-btn.active { background: var(--gold); color: #000; font-weight: 700; border-color: var(--gold); }
+  
+  .ratio-item { margin-bottom: 18px; }
+  .ratio-head { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
+  .ratio-pct { color: var(--gold); font-weight: 600; font-family: 'IBM Plex Mono', monospace; }
+  
+  input[type=range] { width: 100%; -webkit-appearance: none; height: 6px; background: var(--panel-2); border-radius: 4px; outline: none; }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%;
+    background: var(--gold); cursor: pointer; border: 3px solid var(--bg);
   }
 
-  .wrap{max-width:760px; margin:0 auto;}
+  /* Expenses List */
+  .exp-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+  .exp-row { display: flex; gap: 10px; }
+  .exp-row input[type=text] { flex: 2; }
+  .exp-row input[type=number] { flex: 1; font-family: 'IBM Plex Mono', monospace; }
+  .exp-row button {
+    background: var(--panel-2); border: 1px solid var(--line); color: var(--coral);
+    width: 40px; border-radius: 10px; cursor: pointer; font-size: 18px;
+  }
+  .add-btn {
+    width: 100%; padding: 12px; border-radius: 10px; border: 1px dashed var(--line);
+    background: transparent; color: var(--gold-soft); cursor: pointer; font-weight: 700;
+  }
 
-  /* ===== Header ===== */
-  header{margin-bottom:28px; text-align:center; position:relative;}
-  .eyebrow{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12px; letter-spacing:.12em; color:var(--gold);
-    text-transform:uppercase; margin-bottom:10px;
-  }
-  h1{
-    font-size:clamp(28px,6vw,38px); font-weight:900; color:var(--ink);
-    line-height:1.2;
-  }
-  h1 span{color:var(--gold);}
-  .sub{color:var(--ink-dim); font-size:14px; margin-top:8px;}
+  /* Results Grid */
+  .results-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+  .result-box { background: var(--panel-2); border: 1px solid var(--line); border-radius: 12px; padding: 16px; text-align: center; }
+  .result-label { font-size: 12px; color: var(--ink-dim); margin-bottom: 6px; }
+  .result-value { font-family: 'IBM Plex Mono', monospace; font-size: 18px; font-weight: 700; }
+  
+  .bar { display: flex; height: 12px; border-radius: 6px; overflow: hidden; margin: 20px 0 8px; background: var(--panel-2); }
+  .bar > div { height: 100%; transition: width 0.3s; }
+  
+  .note { background: rgba(201,162,75,0.05); border-right: 4px solid var(--gold); padding: 12px; border-radius: 8px; font-size: 13px; margin-top: 16px; }
 
-  /* ===== Card ===== */
-  .card{
-    background:var(--panel);
-    border:1px solid var(--line);
-    border-radius:18px;
-    padding:24px;
-    margin-bottom:20px;
-  }
-  .card-title{
-    font-size:16px; font-weight:700; margin-bottom:16px;
-    display:flex; align-items:center; gap:8px;
-  }
-  .card-title .dot{width:8px; height:8px; border-radius:50%; background:var(--gold); flex:none;}
-
-  label{display:block; font-size:13px; color:var(--ink-dim); margin-bottom:6px;}
-  input[type=number]{
-    width:100%; background:var(--panel-2); border:1px solid var(--line);
-    color:var(--ink); font-family:'IBM Plex Mono', monospace; font-size:18px; font-weight:600;
-    padding:12px 14px; border-radius:10px; outline:none;
-    transition:border-color .15s ease;
-  }
-  input[type=number]:focus{border-color:var(--gold);}
-  input[type=number]::-webkit-outer-spin-button,
-  input[type=number]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0;}
-
-  .row{display:flex; gap:12px; flex-wrap:wrap;}
-  .row > div{flex:1; min-width:130px;}
-
-  /* ===== Ratio sliders ===== */
-  .ratio-item{margin-bottom:18px;}
-  .ratio-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;}
-  .ratio-name{font-size:14px; font-weight:700;}
-  .ratio-pct{font-family:'IBM Plex Mono', monospace; font-size:14px; color:var(--gold); font-weight:600;}
-  input[type=range]{
-    width:100%; -webkit-appearance:none; height:6px; border-radius:4px;
-    background:var(--panel-2); outline:none;
-  }
-  input[type=range]::-webkit-slider-thumb{
-    -webkit-appearance:none; width:20px; height:20px; border-radius:50%;
-    background:var(--gold); cursor:pointer; border:3px solid var(--bg);
-    box-shadow:0 0 0 1px var(--line);
-  }
-  .ratio-total{
-    font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--ink-dim);
-    text-align:left; margin-top:4px;
-  }
-  .ratio-total.bad{color:var(--coral);}
-
-  /* presets */
-  .presets{display:flex; gap:8px; margin-bottom:18px; flex-wrap:wrap;}
-  .preset-btn{
-    font-family:'Tajawal'; font-size:12px; padding:7px 14px; border-radius:20px;
-    border:1px solid var(--line); background:var(--panel-2); color:var(--ink-dim);
-    cursor:pointer; transition:.15s ease;
-  }
-  .preset-btn:hover{border-color:var(--gold); color:var(--gold-soft);}
-  .preset-btn.active{background:var(--gold); color:#1a1408; border-color:var(--gold); font-weight:700;}
-
-  /* ===== Results ===== */
-  .results-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px;}
-  .result-box{
-    background:var(--panel-2); border:1px solid var(--line); border-radius:12px;
-    padding:16px 12px; text-align:center;
-  }
-  .result-label{font-size:12px; color:var(--ink-dim); margin-bottom:6px;}
-  .result-value{font-family:'IBM Plex Mono', monospace; font-size:20px; font-weight:700;}
-  .result-value.mint{color:var(--mint);}
-  .result-value.gold{color:var(--gold-soft);}
-  .result-value.coral{color:var(--coral);}
-
-  .bar{
-    display:flex; height:14px; border-radius:8px; overflow:hidden; margin:18px 0 6px;
-    border:1px solid var(--line);
-  }
-  .bar > div{height:100%; transition:width .25s ease;}
-
-  .bar-legend{display:flex; justify-content:space-between; font-size:11px; color:var(--ink-dim); font-family:'IBM Plex Mono', monospace;}
-
-  /* ===== expense list ===== */
-  .exp-list{display:flex; flex-direction:column; gap:10px; margin-bottom:14px;}
-  .exp-row{display:flex; gap:10px; align-items:center;}
-  .exp-row input[type=text]{
-    flex:2; background:var(--panel-2); border:1px solid var(--line); color:var(--ink);
-    font-family:'Tajawal'; font-size:14px; padding:10px 12px; border-radius:10px; outline:none;
-  }
-  .exp-row input[type=text]:focus{border-color:var(--gold);}
-  .exp-row input[type=number]{flex:1; min-width:90px; font-size:14px; padding:10px 12px;}
-  .exp-row button{
-    flex:none; width:36px; height:36px; border-radius:8px; border:1px solid var(--line);
-    background:var(--panel-2); color:var(--coral); cursor:pointer; font-size:16px;
-  }
-  .add-btn{
-    width:100%; padding:12px; border-radius:10px; border:1px dashed var(--line);
-    background:transparent; color:var(--gold-soft); font-family:'Tajawal'; font-weight:700;
-    cursor:pointer; font-size:14px;
-  }
-  .add-btn:hover{border-color:var(--gold);}
-
-  .note{
-    background:var(--panel-2); border-right:3px solid var(--gold); border-radius:8px;
-    padding:12px 14px; font-size:13px; color:var(--ink-dim); margin-top:14px; line-height:1.7;
-  }
-  .note strong{color:var(--gold-soft);}
-
-  footer{text-align:center; color:var(--ink-dim); font-size:12px; margin-top:24px;}
-
-  @media (max-width:480px){
-    .results-grid{grid-template-columns:1fr;}
-  }
+  @media (max-width: 580px) { .results-grid { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
 
-<!-- 1. BOGGA QUFULKA (PASSWORD SCREEN) -->
+<!-- BOGGA PASSWORD-KA -->
 <div id="lockScreen">
   <div class="lock-card">
     <span class="lock-icon">🔒</span>
     <h2>مخطط راتبي</h2>
     <p>هذه الصفحة محمية بكلمة مرور للحفاظ على خصوصية بياناتك</p>
-
     <div id="alertBox" class="alert-box"></div>
-
     <div class="input-group">
-      <label>أدخل كلمة المرور العامة</label>
+      <label>أدخل كلمة المرور</label>
       <input type="password" id="passwordInput" class="lock-field" placeholder="••••••••">
     </div>
     <button class="btn-lock" onclick="verifyPassword()">دخول 🔓</button>
   </div>
 </div>
 
-<!-- 2. BOGGA MASHALKA (MAIN APP CONTENT) -->
+<!-- BOGGA APPKA (WAA KAN OO DHAMMAYSTIRAN) -->
 <div id="mainAppContent" class="wrap">
-
-  <!-- Batanka Logout-ga -->
-  <div class="logout-container">
+  
+  <div class="top-bar">
+    <h1 style="font-size: 24px; font-weight: 900;">مخطط <span>راتبي</span> 👋</h1>
     <button class="logout-btn" onclick="logout()">تسجيل الخروج 🚪</button>
   </div>
 
-  <header>
-    <div class="eyebrow">مخطط الميزانية الشخصية</div>
-    <h1>وين <span>بيروح</span> راتبي؟</h1>
-    <div class="sub">دخّل راتبك ومصاريفك، واطّلع على خطة واضحة لتوزيع كل ريال</div>
-  </header>
+  <!-- Fariinta Guusha ee ka muuqata sawirkaaga -->
+  <div class="success-banner">
+    <h3>✓ تم الدخول بنجاح وبشكل آمن!</h3>
+    <p>هنا يمكنك البدء في إدارة وتخطيط راتبك بكل سهولة.</p>
+  </div>
 
-  <!-- الراتب -->
+  <!-- Qaybta Xisaabinta Rataabka -->
   <div class="card">
-    <div class="card-title"><span class="dot"></span> راتبك الشهري</div>
-    <label for="salary">المبلغ</label>
-    <input type="number" id="salary" placeholder="مثال: 800" value="800" min="0">
+    <div class="card-title"><span class="dot"></span> الراتب الشهري الرئيسي</div>
+    <label>إجمالي الدخل الشهري</label>
+    <input type="number" id="salary" value="1200" min="0">
   </div>
 
   <!-- المصاريف الثابتة -->
   <div class="card">
-    <div class="card-title"><span class="dot"></span> مصاريفك الثابتة</div>
+    <div class="card-title"><span class="dot"></span> المصاريف الثابتة (الإيجار، الفواتير، الالتزامات)</div>
     <div class="exp-list" id="expList"></div>
-    <button class="add-btn" id="addExp">+ أضف مصروف</button>
+    <button class="add-btn" onclick="addExpenseRow()">+ أضف بند مصروفات جديد</button>
   </div>
 
-  <!-- نسبة التوزيع -->
+  <!-- Sliders-ka Boqolleyda -->
   <div class="card">
-    <div class="card-title"><span class="dot"></span> خطة توزيع الباقي</div>
-
+    <div class="card-title"><span class="dot"></span> توزيع المتبقي من الراتب</div>
     <div class="presets">
-      <button class="preset-btn active" data-p="50,30,20">50 / 30 / 20</button>
-      <button class="preset-btn" data-p="60,20,20">60 / 20 / 20</button>
-      <button class="preset-btn" data-p="40,30,30">40 / 30 / 30</button>
-      <button class="preset-btn" data-p="70,15,15">70 / 15 / 15</button>
+      <button class="preset-btn active" onclick="setPreset(50,30,20,this)">50 / 30 / 20</button>
+      <button class="preset-btn" onclick="setPreset(60,20,20,this)">60 / 20 / 20</button>
+      <button class="preset-btn" onclick="setPreset(40,40,20,this)">40 / 40 / 20</button>
     </div>
 
     <div class="ratio-item">
-      <div class="ratio-head">
-        <span class="ratio-name">🟫 ضروريات إضافية (أكل، نقل، فواتير)</span>
-        <span class="ratio-pct" id="pctA">50%</span>
-      </div>
-      <input type="range" id="sliderA" min="0" max="100" value="50">
+      <div class="ratio-head"><span>🟫 الضروريات (أكل، فواتير إضافية)</span><span class="ratio-pct" id="pctA">50%</span></div>
+      <input type="range" id="sliderA" min="0" max="100" value="50" oninput="adjustSliders('A')">
     </div>
-
     <div class="ratio-item">
-      <div class="ratio-head">
-        <span class="ratio-name">🟨 رغبات وكماليات</span>
-        <span class="ratio-pct" id="pctB">30%</span>
-      </div>
-      <input type="range" id="sliderB" min="0" max="100" value="30">
+      <div class="ratio-head"><span>🟨 الكماليات والرفاهية</span><span class="ratio-pct" id="pctB">30%</span></div>
+      <input type="range" id="sliderB" min="0" max="100" value="30" oninput="adjustSliders('B')">
     </div>
-
     <div class="ratio-item">
-      <div class="ratio-head">
-        <span class="ratio-name">🟩 ادخار وسداد ديون</span>
-        <span class="ratio-pct" id="pctC">20%</span>
-      </div>
-      <input type="range" id="sliderC" min="0" max="100" value="20">
+      <div class="ratio-head"><span>🟩 الإدخار والاستثمار</span><span class="ratio-pct" id="pctC">20%</span></div>
+      <input type="range" id="sliderC" min="0" max="100" value="20" oninput="adjustSliders('C')">
     </div>
-
-    <div class="ratio-total" id="ratioTotal">المجموع: 100%</div>
   </div>
 
-  <!-- النتائج -->
+  <!-- Natiijada Labada Sektor -->
   <div class="card">
-    <div class="card-title"><span class="dot"></span> خلاصة شهرك</div>
-
-    <div class="bar" id="bar">
-      <div style="width:0%; background:var(--gold);" id="barExp"></div>
-      <div style="width:50%; background:var(--coral);" id="barA"></div>
-      <div style="width:30%; background:#D9B85C;" id="barB"></div>
-      <div style="width:20%; background:var(--mint);" id="barC"></div>
-    </div>
-    <div class="bar-legend">
-      <span>مصاريف ثابتة</span>
-      <span>الباقي بعد التوزيع</span>
+    <div class="card-title"><span class="dot"></span> خلاصة الميزانية والشهر</div>
+    
+    <div class="bar">
+      <div id="barExp" style="background: var(--coral); width: 0%;"></div>
+      <div id="barA" style="background: var(--gold); width: 50%;"></div>
+      <div id="barB" style="background: #e5c158; width: 30%;"></div>
+      <div id="barC" style="background: var(--mint); width: 20%;"></div>
     </div>
 
-    <div class="results-grid" style="margin-top:18px;">
-      <div class="result-box">
-        <div class="result-label">إجمالي المصاريف الثابتة</div>
-        <div class="result-value gold" id="totalExp">0</div>
-      </div>
-      <div class="result-box">
-        <div class="result-label">المتبقي للتوزيع</div>
-        <div class="result-value" id="remaining">0</div>
-      </div>
-      <div class="result-box">
-        <div class="result-label">ادخار شهري</div>
-        <div class="result-value mint" id="saveAmt">0</div>
-      </div>
+    <div class="results-grid">
+      <div class="result-box"><div class="result-label">المصاريف الثابتة</div><div class="result-value" id="resFixed">0</div></div>
+      <div class="result-box"><div class="result-label">المبلغ المتبقي للتوزيع</div><div class="result-value" style="color:var(--gold);" id="resRem">0</div></div>
+      <div class="result-box"><div class="result-label">صافي الإدخار المستهدف</div><div class="result-value" style="color:var(--mint);" id="resSave">0</div></div>
     </div>
 
-    <div class="results-grid" style="margin-top:10px;">
-      <div class="result-box">
-        <div class="result-label">ضروريات إضافية</div>
-        <div class="result-value" id="amtA">0</div>
-      </div>
-      <div class="result-box">
-        <div class="result-label">كماليات</div>
-        <div class="result-value" id="amtB">0</div>
-      </div>
-      <div class="result-box">
-        <div class="result-label">ادخار / ديون</div>
-        <div class="result-value mint" id="amtC">0</div>
-      </div>
+    <div class="results-grid">
+      <div class="result-box"><div class="result-label">مبلغ الضروريات</div><div class="result-value" id="resA">0</div></div>
+      <div class="result-box"><div class="result-label">مبلغ الكماليات</div><div class="result-value" id="resB">0</div></div>
+      <div class="result-box"><div class="result-label">مبلغ الإدخار الاحتياطي</div><div class="result-value" id="resC">0</div></div>
     </div>
 
-    <div class="note" id="warnNote" style="display:none;"></div>
+    <div id="statusNote" class="note">كل الحسابات دقيقة وتتم محلياً بالكامل على متصفحك.</div>
   </div>
 
-  <footer>كل الحسابات تتم في متصفحك فقط — بياناتك ما تتخزن ولا تُرسل لأي مكان.</footer>
 </div>
 
 <script>
-  // ===== PASSWORD VERIFICATION FUNCTION =====
-  const CORRECT_PASSWORD = "MyBudget@2025";
+  const PASS = "MyBudget@2025";
 
   function verifyPassword() {
-    const userInput = document.getElementById('passwordInput').value;
+    const input = document.getElementById('passwordInput').value;
     const alertBox = document.getElementById('alertBox');
-    
-    if (userInput === CORRECT_PASSWORD) {
-      alertBox.style.display = 'none';
+    if (input === PASS) {
       document.getElementById('lockScreen').style.display = 'none';
       document.getElementById('mainAppContent').style.display = 'block';
+      calculate();
     } else {
-      alertBox.innerText = "كلمة المرور غير صحيحة! حاول مرة أخرى.";
+      alertBox.innerText = "كلمة المرور غير صحيحة!";
       alertBox.style.display = 'block';
     }
   }
 
-  // Allow entering with "Enter" key
-  document.getElementById('passwordInput').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-      verifyPassword();
-    }
-  });
+  document.getElementById('passwordInput').addEventListener('keypress', (e) => { if(e.key==='Enter') verifyPassword(); });
+  function logout() { window.location.reload(); }
 
-  function logout() {
-    window.location.reload();
-  }
-
-
-  // ===== BUDGET CALCULATIONS CODE =====
+  // App Logic
   const expList = document.getElementById('expList');
-  const addExpBtn = document.getElementById('addExp');
+  const initialExpenses = [{n:'الإيجار السكني', a:300}, {n:'الفواتير والإنترنت', a:100}];
 
-  const defaultExpenses = [
-    {name:'سكن / إيجار', amount:''},
-    {name:'فواتير (كهرباء، ماء، نت)', amount:''},
-    {name:'نقل / بنزين', amount:''},
-  ];
-
-  function addExpenseRow(name='', amount=''){
-    const row = document.createElement('div');
-    row.className = 'exp-row';
-    row.innerHTML = `
-      <input type="text" placeholder="اسم المصروف" value="${name}">
-      <input type="number" placeholder="المبلغ" min="0" value="${amount}">
-      <button title="حذف">×</button>
+  function addExpenseRow(name='', amt='') {
+    const div = document.createElement('div');
+    div.className = 'exp-row';
+    div.innerHTML = `
+      <input type="text" placeholder="بند المصروف" value="${name}" oninput="calculate()">
+      <input type="number" placeholder="المبلغ" value="${amt}" oninput="calculate()">
+      <button onclick="this.parentElement.remove(); calculate();">×</button>
     `;
-    row.querySelector('button').addEventListener('click', () => {
-      row.remove();
-      calculate();
-    });
-    row.querySelectorAll('input').forEach(inp => inp.addEventListener('input', calculate));
-    expList.appendChild(row);
+    expList.appendChild(div);
+    calculate();
   }
 
-  defaultExpenses.forEach(e => addExpenseRow(e.name, e.amount));
-  addExpBtn.addEventListener('click', () => { addExpenseRow(); calculate(); });
+  initialExpenses.forEach(x => addExpenseRow(x.n, x.a));
 
-  const salaryInput = document.getElementById('salary');
-  const sliderA = document.getElementById('sliderA');
-  const sliderB = document.getElementById('sliderB');
-  const sliderC = document.getElementById('sliderC');
-  const pctA = document.getElementById('pctA');
-  const pctB = document.getElementById('pctB');
-  const pctC = document.getElementById('pctC');
-  const ratioTotal = document.getElementById('ratioTotal');
-  const presetBtns = document.querySelectorAll('.preset-btn');
-
-  let lastEdited = 'A';
-
-  function fmt(n){
-    return Math.round(n).toLocaleString('en-US');
-  }
-
-  function normalizeSliders(changed){
-    let a = +sliderA.value, b = +sliderB.value, c = +sliderC.value;
-    let total = a+b+c;
-    if(total === 100){ updateLabels(); return; }
-
-    let others = ['A','B','C'].filter(x=>x!==changed);
-    let vals = {A:a,B:b,C:c};
-    let diff = 100 - vals[changed];
-    let sumOthers = others.reduce((s,k)=>s+vals[k],0);
-
-    if(sumOthers <= 0){
-      others.forEach(k => vals[k] = diff/others.length);
+  function adjustSliders(lead) {
+    let a = +document.getElementById('sliderA').value;
+    let b = +document.getElementById('sliderB').value;
+    let c = +document.getElementById('sliderC').value;
+    
+    let target = 100 - (lead === 'A' ? a : lead === 'B' ? b : c);
+    let sumOthers = (lead === 'A' ? b+c : lead === 'B' ? a+c : a+b) || 1;
+    
+    if(lead === 'A') {
+      document.getElementById('sliderB').value = Math.round(b * target / sumOthers);
+      document.getElementById('sliderC').value = 100 - a - +document.getElementById('sliderB').value;
+    } else if(lead === 'B') {
+      document.getElementById('sliderA').value = Math.round(a * target / sumOthers);
+      document.getElementById('sliderC').value = 100 - b - +document.getElementById('sliderA').value;
     } else {
-      others.forEach(k => vals[k] = Math.max(0, vals[k] + (diff - sumOthers) * (vals[k]/sumOthers)));
+      document.getElementById('sliderA').value = Math.round(a * target / sumOthers);
+      document.getElementById('sliderB').value = 100 - c - +document.getElementById('sliderA').value;
     }
-
-    sliderA.value = Math.round(vals.A);
-    sliderB.value = Math.round(vals.B);
-    sliderC.value = Math.round(vals.C);
-
-    let fixedTotal = (+sliderA.value)+(+sliderB.value)+(+sliderC.value);
-    let drift = 100 - fixedTotal;
-    if(drift !== 0){
-      let target = others[0];
-      let map = {A:sliderA, B:sliderB, C:sliderC};
-      map[target].value = Math.max(0, +map[target].value + drift);
-    }
-    updateLabels();
+    document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+    calculate();
   }
 
-  function updateLabels(){
-    pctA.textContent = sliderA.value + '%';
-    pctB.textContent = sliderB.value + '%';
-    pctC.textContent = sliderC.value + '%';
-    let total = (+sliderA.value)+(+sliderB.value)+(+sliderC.value);
-    ratioTotal.textContent = 'المجموع: ' + total + '%';
-    ratioTotal.classList.toggle('bad', total !== 100);
+  function setPreset(a,b,c, btn) {
+    document.getElementById('sliderA').value = a;
+    document.getElementById('sliderB').value = b;
+    document.getElementById('sliderC').value = c;
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    calculate();
   }
 
-  [['A',sliderA],['B',sliderB],['C',sliderC]].forEach(([key, el])=>{
-    el.addEventListener('input', ()=>{
-      lastEdited = key;
-      normalizeSliders(key);
-      presetBtns.forEach(b=>b.classList.remove('active'));
-      calculate();
-    });
-  });
+  function calculate() {
+    let salary = +document.getElementById('salary').value || 0;
+    let rows = expList.querySelectorAll('.exp-row');
+    let fixedTotal = 0;
+    rows.forEach(r => { fixedTotal += (+r.querySelectorAll('input')[1].value || 0); });
 
-  presetBtns.forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const [a,b,c] = btn.dataset.p.split(',').map(Number);
-      sliderA.value=a; sliderB.value=b; sliderC.value=c;
-      updateLabels();
-      presetBtns.forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      calculate();
-    });
-  });
+    let remaining = salary - fixedTotal;
+    let a = +document.getElementById('sliderA').value;
+    let b = +document.getElementById('sliderB').value;
+    let c = +document.getElementById('sliderC').value;
 
-  function getExpenses(){
-    return [...expList.querySelectorAll('.exp-row')].map(row=>{
-      const [nameInp, amtInp] = row.querySelectorAll('input');
-      return { name: nameInp.value, amount: parseFloat(amtInp.value) || 0 };
-    });
-  }
+    document.getElementById('pctA').innerText = a + '%';
+    document.getElementById('pctB').innerText = b + '%';
+    document.getElementById('pctC').innerText = c + '%';
 
-  const totalExpEl = document.getElementById('totalExp');
-  const remainingEl = document.getElementById('remaining');
-  const saveAmtEl = document.getElementById('saveAmt');
-  const amtA = document.getElementById('amtA');
-  const amtB = document.getElementById('amtB');
-  const amtC = document.getElementById('amtC');
-  const barExp = document.getElementById('barExp');
-  const barA = document.getElementById('barA');
-  const barB = document.getElementById('barB');
-  const barC = document.getElementById('barC');
-  const warnNote = document.getElementById('warnNote');
+    document.getElementById('resFixed').innerText = fixedTotal;
+    document.getElementById('resRem').innerText = Math.max(0, remaining);
 
-  function calculate(){
-    const salary = parseFloat(salaryInput.value) || 0;
-    const expenses = getExpenses();
-    const totalExpenses = expenses.reduce((s,e)=>s+e.amount, 0);
-    const remaining = salary - totalExpenses;
+    if (remaining > 0) {
+      let valA = Math.round(remaining * a / 100);
+      let valB = Math.round(remaining * b / 100);
+      let valC = Math.round(remaining * c / 100);
 
-    const a = +sliderA.value, b = +sliderB.value, c = +sliderC.value;
+      document.getElementById('resA').innerText = valA;
+      document.getElementById('resB').innerText = valB;
+      document.getElementById('resC').innerText = valC;
+      document.getElementById('resSave').innerText = valC;
 
-    totalExpEl.textContent = fmt(totalExpenses);
-    remainingEl.textContent = fmt(Math.max(0,remaining));
-    remainingEl.className = 'result-value ' + (remaining < 0 ? 'coral' : 'gold');
-
-    if(remaining >= 0){
-      const valA = remaining * a/100;
-      const valB = remaining * b/100;
-      const valC = remaining * c/100;
-
-      amtA.textContent = fmt(valA);
-      amtB.textContent = fmt(valB);
-      amtC.textContent = fmt(valC);
-      saveAmtEl.textContent = fmt(valC);
-
-      const expPct = salary>0 ? (totalExpenses/salary*100) : 0;
-      barExp.style.width = Math.min(expPct,100) + '%';
-      const restPct = 100-Math.min(expPct,100);
-      barA.style.width = (restPct*a/100)+'%';
-      barB.style.width = (restPct*b/100)+'%';
-      barC.style.width = (restPct*c/100)+'%';
-
-      if(expPct > 70){
-        warnNote.style.display='block';
-        warnNote.innerHTML = `<strong>تنبيه:</strong> مصاريفك الثابتة تستهلك ${Math.round(expPct)}% من راتبك. حاول تقلل بعض البنود عشان تقدر تدخر أكثر.`;
-      } else {
-        warnNote.style.display='none';
-      }
+      let pExp = (fixedTotal / salary) * 100;
+      let pRem = 100 - pExp;
+      document.getElementById('barExp').style.width = pExp + '%';
+      document.getElementById('barA').style.width = (pRem * a / 100) + '%';
+      document.getElementById('barB').style.width = (pRem * b / 100) + '%';
+      document.getElementById('barC').style.width = (pRem * c / 100) + '%';
+      document.getElementById('statusNote').innerText = "تم توزيع الميزانية بشكل متزن وسليم.";
     } else {
-      amtA.textContent = '0';
-      amtB.textContent = '0';
-      amtC.textContent = '0';
-      saveAmtEl.textContent = '0';
-      barExp.style.width='100%';
-      barA.style.width='0%'; barB.style.width='0%'; barC.style.width='0%';
-
-      warnNote.style.display='block';
-      warnNote.innerHTML = `<strong>تنبيه:</strong> مصاريفك الثابتة (${fmt(totalExpenses)}) تجاوزت راتبك (${fmt(salary)}) بمقدار ${fmt(Math.abs(remaining))}. راجع بنود مصاريفك.`;
+      document.getElementById('resA').innerText = 0;
+      document.getElementById('resB').innerText = 0;
+      document.getElementById('resC').innerText = 0;
+      document.getElementById('resSave').innerText = 0;
+      document.getElementById('barExp').style.width = '100%';
+      document.getElementById('barA').style.width = '0%';
+      document.getElementById('barB').style.width = '0%';
+      document.getElementById('barC').style.width = '0%';
+      document.getElementById('statusNote').innerText = "تحذير: المصاريف الثابتة تتجاوز دخل الراتب الحالي!";
     }
   }
-
-  salaryInput.addEventListener('input', calculate);
-  updateLabels();
-  calculate();
 </script>
 </body>
 </html>
